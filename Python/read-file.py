@@ -5,6 +5,10 @@ from collections import namedtuple
 import requests
 from typing import NamedTuple
 
+def main():
+    if len(sys.argv) > 1 :
+    read_file(sys.argv[1])
+    
 class ImportData(NamedTuple):
     id: int
     name: str
@@ -17,9 +21,6 @@ def read_file(x):
         read_json(x)
     elif x.find(".xml") > 0:
         read_xml(x)
-
-def main():
-    print("Hello, World")
 
 def read_json(x):
     print("read_json")
@@ -35,5 +36,5 @@ def read_csv(x):
 def read_xml(x):
     print("read_xml")
 
-if len(sys.argv) > 1 :
-    read_file(sys.argv[1])
+
+main()
