@@ -5,7 +5,7 @@ var path = require('path');
 
 var con = mysql.createPool({
   password: 'Secure_123',
-  user: 'dushar88',
+  user: 'deploy3',
   host: 'ec2-54-89-210-177.compute-1.amazonaws.com',
   port: 3306,
   database: 'HotelManagement'
