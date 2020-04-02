@@ -17,7 +17,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'importUtil' });
 });
 
-
 /**
  * --POST--
  * Purpose
@@ -53,6 +52,9 @@ router.post('/languages', function({body}, res, next) {
  * /languages
  * 
  * * Expected body params
+ * lang_id: int
+ * lang_name: string(20)
+ * emp_id: int
  *  
  */
 router.put('/languages', function({body},res, next) {
