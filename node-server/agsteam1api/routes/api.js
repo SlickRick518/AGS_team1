@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
+var passport = require('passport');
 var path = require('path');
 
 var con = mysql.createPool({
@@ -19,21 +20,50 @@ router.get('/', function(req, res, next) {
 
 /**
  * --POST--
- * purpose
+ * Purpose
  *  Adds a language to the Languages Table to the Database
  * 
  * Endpoint 
  *  /languages
  *  
- * params
+ * Expected body params
  *  lang_id: int
  *  lang_name: string(20)
  *  emp_id: int
 */
-router.post('/langaguges', function(req, res, next) {
-  let sql = "CALL addLanguage("+req.body.lang_id+","+req.body.lang_name+","+req.body.emp_id+")";
-  con.query(sql, function(req, res, next) {
+router.post('/languages', function({body}, res, next) {
+  const {
+    lang_id,
+    lang_name,
+    emp_id
+  } = body;
+  let sql = "CALL addLanguage(?,?,?)";
+  con.query(sql, [lang_id, lang_name, emp_id], function(err, result, fields) {
     if (err) console.log(err);
+    res.send(result);
+  })
+});
+
+/**
+ *  --PUT--
+ * Purpose
+ *  Modifies a Language in the Languages Table in the Database
+ * 
+ * Endpoint
+ * /languages
+ * 
+ * * Expected body params
+ *  
+ */
+router.put('/languages', function({body},res, next) {
+  const {
+    lang_id,
+    lang_name,
+    emp_id
+  } = body;
+  let sql = "CALL modifyLanguage(?,?,?)";
+  con.query(sql, [lang_id, lang_name, emp_id], function(err, result, ields) {
+    if(err) console.log(err);
     res.send(result);
   })
 });
