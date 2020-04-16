@@ -1,6 +1,6 @@
-function checkFileType(evt) {
+function checkFileType() {
     var reader = new FileReader();
-    var file = evt.target.files[0];
+    var file = document.getElementById('fileinput').files[0];
 
     reader.onload = function (e) {
         var contents = e.target.result;
@@ -34,18 +34,23 @@ function readExcelFile(file) {
     workbook.SheetNames.forEach(function (sheetName) {
         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
         var json_object = JSON.stringify(XL_row_object);
-        console.log(json_object);
+        postRequest(json_object, "shifts"); //SEND OUT THE DOOR TO API CALL
 
     });
 };
 
 function readJsonFile(file) {
-    console.log(file);
+    console.log(file); //SEND OUT THE DOOR TO API CALL
 };
 
 function readCsvFile(file) {
-    console.log(csvJSON(file));
+    console.log(csvJSON(file)); //SEND OUT THE DOOR TO API CALL
 };
+
+function submitfiles() {
+    checkFileType();
+    
+}
 
 function csvJSON(csv) {
     //remove carriage return from windows created files
@@ -67,11 +72,25 @@ function csvJSON(csv) {
         for (var j = 0; j < headers.length; j++) {
             obj[headers[j]] = currentline[j];
         }
-
         result.push(obj);
-
     }
 
     //JSON
     return JSON.stringify(result);
+}
+
+function postRequest(data, resource) {
+    let api_domain = "http://127.0.0.1/api/";
+    $.ajax({
+        type: "POST",
+        url: api_domain + resource,
+        data: {'data': data},
+        success: function (result, status, xhr) {
+            alert("File uploaded without a problem");
+            window.location.reload();
+        },
+        error: function (xhr, status, error) {
+            alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+        }
+    });
 }

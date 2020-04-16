@@ -114,15 +114,15 @@ router.post('/shifts', function (req, res, next) {
     outputData.push(decomp);
   });
   let sql = "CALL addEmployeeShift(?,?,?,?,?,?,?,?,?,?,?)";
-    for (let x = 0; x < outputData.length; ++x) {
-      con.query(sql, outputData[x], function (err, result, fields) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
+  for (let x = 0; x < outputData.length; ++x) {
+    con.query(sql, outputData[x], function (err, result, fields) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
   res.send("OK");
 });
-//----- END SHIFTS RESOURCE ----------//
 
+//----- END SHIFTS RESOURCE ----------//
 module.exports = router;
