@@ -16,7 +16,7 @@ var con = mysql.createPool({
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'importUtil' });
 });
-
+//----- LANGAUGES RESOURCE -----------//
 /**
  * --POST--
  * Purpose
@@ -57,7 +57,7 @@ router.post('/languages', function({body}, res, next) {
  * emp_id: int
  *  
  */
-router.put('/languages', function({body},res, next) {
+router.put('/languages', function({body}, res, next) {
   const {
     lang_id,
     lang_name,
@@ -69,5 +69,40 @@ router.put('/languages', function({body},res, next) {
     res.send(result);
   })
 });
+//----- END LANGAUGES RESOURCE -------//
+
+//----- SHIFTS RESOURCE --------------//
+/**
+ *  --POST--
+ * Purpose
+ *  Creates a shift entry in the databse
+ * 
+ * Endpoint
+ * /shifts
+ * 
+ * * Expected body params
+ * emp_id
+ * prim_location
+ * prim_job
+ *  
+ */
+router.post('/shifts', function(req, res, next) {
+  let json = JSON.parse(req.body.data);
+  let outputData = [];
+  json.forEach(function (item) {
+    let decomp = [];
+    decomp[0] = item['Name'];
+    decomp[1] = item['Primary Location Name - Single Location'];
+    decomp[2] = item['Primary Job'];
+    decomp[3] = item['Seniority Date|For Shift'];
+    decomp[4] = item['Scheduled Hours'];
+    decomp[5] = item['Type'];
+    decomp[6] = 1;
+    outputData.push(decomp);
+  })
+  console.log(outputData);
+  res.send("OK");
+});
+//----- END SHIFTS RESOURCE ----------//
 
 module.exports = router;
