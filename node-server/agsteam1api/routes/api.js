@@ -13,10 +13,10 @@ var con = mysql.createPool({
 });
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.render('index', { title: 'importUtil' });
 });
-
+//----- LANGAUGES RESOURCE -----------//
 /**
  * --POST--
  * Purpose
@@ -30,14 +30,14 @@ router.get('/', function(req, res, next) {
  *  lang_name: string(20)
  *  emp_id: int
 */
-router.post('/languages', function({body}, res, next) {
+router.post('/languages', function ({ body }, res, next) {
   const {
     lang_id,
     lang_name,
     emp_id
   } = body;
   let sql = "CALL addLanguage(?,?,?)";
-  con.query(sql, [lang_id, lang_name, emp_id], function(err, result, fields) {
+  con.query(sql, [lang_id, lang_name, emp_id], function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   })
@@ -57,17 +57,72 @@ router.post('/languages', function({body}, res, next) {
  * emp_id: int
  *  
  */
-router.put('/languages', function({body},res, next) {
+router.put('/languages', function ({ body }, res, next) {
   const {
     lang_id,
     lang_name,
     emp_id
   } = body;
   let sql = "CALL modifyLanguage(?,?,?)";
-  con.query(sql, [lang_id, lang_name, emp_id], function(err, result, ields) {
-    if(err) console.log(err);
+  con.query(sql, [lang_id, lang_name, emp_id], function (err, result, fields) {
+    if (err) console.log(err);
     res.send(result);
   })
 });
+//----- END LANGAUGES RESOURCE -------//
+
+//----- SHIFTS RESOURCE --------------//
+/**
+ *  --POST--
+ * Purpose
+ *  Creates a shift entry in the databse
+ * 
+ * Endpoint
+ * /shifts
+ * 
+ * * Expected body params
+ * data[]  // ARRAY OF DATA ENTRIES FOR EACH RECORD
+ * { 
+ *        Employee Id
+ *        Primary Location Name - Single Location
+ *        Primary Job
+ *        Seniority Date
+ *        Scheduled Hours
+ *        Type
+ *        Shift Start Time
+ *        Shift Start Date
+ *        Shift End Time
+ *        Shift End Date
+ * }
+ */
+router.post('/shifts', function (req, res, next) {
+  let json = JSON.parse(req.body.data);
+  let outputData = [];
+  json.forEach(function (item) {
+    let decomp = [];
+    decomp[0] = item['Id'];
+    decomp[1] = item['Primary Location Name - Single Location'];
+    decomp[2] = item['Primary Job'];
+    decomp[3] = item['Seniority Date'];
+    decomp[4] = item['Scheduled Hours'];
+    decomp[5] = item['Type'];
+    decomp[6] = item['Shift Start Time'];
+    decomp[7] = item['Shift Start Date'];
+    decomp[8] = item['Shift End Time'];
+    decomp[9] = item['Shift End Date'];
+    decomp[10] = 1; //CURRENT USER ID
+    outputData.push(decomp);
+  });
+  let sql = "CALL addEmployeeShift(?,?,?,?,?,?,?,?,?,?,?)";
+    for (let x = 0; x < outputData.length; ++x) {
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  res.send("OK");
+});
+//----- END SHIFTS RESOURCE ----------//
 
 module.exports = router;
