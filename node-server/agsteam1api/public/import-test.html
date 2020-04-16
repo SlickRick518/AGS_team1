@@ -1,18 +1,60 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
     <script src="scripts/data-import-file-upload.js"></script>
+    <script src="scripts/ui-helper.js"></script>
 </head>
 
 <body>
-    <input type="file" id="fileinput" />
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Team 1 - Data Import Utility Demo</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <h1>Data Import Utility</h1>
+        </div>
+        <div class="row">
+            <div style="width: 81px" class="dropdown">
+                <p>Import Type</p>
+                <button id=dropdown-button class="btn btn-default dropdown-toggle" type="button"
+                    data-toggle="dropdown">Set Type...
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li style="cursor: pointer;">
+                        <p onclick='setType("Shifts")'>Shifts</p>
+                    </li>
+                    <li style="cursor: pointer;">
+                        <p disabled onclick='setType("Employees")'>Employees</p>
+                    </li>
+                    <li style="cursor: pointer;">
+                        <p disabled onclick='setType("Positions")'>Positions</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <label for="fileinput" class="custom-file-upload">Browse...</label>
+            <input id="fileinput" type="file" disabled="disabled"/><br>
+            <p id="filename"></p>
+            <button id="submitButton" class="btn btn-default" onclick="submitfiles()" disabled="disabled">Submit</button>
+        </div>
+    </div>
+    </div>
 </body>
-
-<script>
-   
-    document.getElementById('fileinput').addEventListener('change', checkFileType, false);
-</script>
 
 </html>
