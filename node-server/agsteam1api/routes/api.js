@@ -17,6 +17,20 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'importUtil' });
 });
 
+//----- DEPARTMENT EMPLOYEES RESOURCE -----------//
+/**
+ *  --GET--
+ * Purpose
+ *  Get information about employees in department given a manager's EMmployee ID
+ */
+router.get('/departments/employees/:managerId', function (req, res, next) {
+  con.query("CALL getDepartmentEmpSchedules("+req.params.managerId+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+//----- END DEPARTMENT EMPLOYEES RESOURCE -----------//
+
 //----- LANGAUGES RESOURCE -----------//
 /**
  * --POST--
@@ -261,6 +275,7 @@ router.put('/shifts', function (req, res, next) {
  *  DivisionAbbreviation: varchar(5)
 */
 router.post('/divisions', function (req, res, next) {
+  let valid = true;
   if (!req.is('application/json')) {
     res.send(400);
   } else {
@@ -273,7 +288,7 @@ router.post('/divisions', function (req, res, next) {
       decomp[0] = item['div_code'];
       decomp[1] = item['division_name'];
       decomp[2] = item['div_abbreviation'];
-      decomp(3) = 1; //CURRENT EMPLOYEE ID
+      decomp[3] = 1; //CURRENT EMPLOYEE ID
       outputData.push(decomp);
     });
 
@@ -283,11 +298,206 @@ router.post('/divisions', function (req, res, next) {
     }
 
     let sql = "CALL addDivisionCode(?,?,?,?)";
-    con.query(sql, [DivCode, DivName, DivAbbreviation, 1], function (err, result, fields) {
-      if (err) console.log(err);
-      res.send(result);
-    })
+    for (let x = 0; x < outputData.length; ++x) {
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    res.send("OK");
   }
 });
+
 //----- END DIVISION RESOURCE -------//
+
+//----- EMPLOYEES RESOURCE --------------//
+/**
+ * --POST--
+ * Purpose
+ *  Adds an Employeeto the Database
+ * 
+ * Endpoint 
+ *  /employees
+*/
+router.post('/employees', function (req, res, next) {
+  let valid = true;
+  if (!req.is('application/json')) {
+    res.send(400);
+  } else {
+    let outputData = [];
+    req.body.forEach(function (item) {
+      let decomp = [];
+      if (!item['employee_id']) {
+        valid = false;
+      }
+      decomp[0] = item['employee_id'];
+      decomp[1] = item['user_name'];
+      decomp[2] = item['password'];
+      decomp[3] = item['contact_method'];
+      decomp[4] = item['preffered_email'];
+      decomp[5] = item['preffered_text'];
+      decomp[6] = item['phone_num'];
+      decomp[7] = item['preffered_language_code'];
+      decomp[8] = item['first_name'];
+      decomp[9] = item['last_name'];
+      decomp[10] = 1; //CURRENT EMPLOYEE ID
+      outputData.push(decomp);
+    });
+
+    if(!valid) {
+      res.sendStatus(400);
+      return;
+    }
+
+    let sql = "CALL addEmployee(?,?,?,?,?,?,?,?,?,?,?)";
+    for (let x = 0; x < outputData.length; ++x) {
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    res.send("OK");
+  }
+});
+
+//----- END EMPLOYEE RESOURCE -------//
+//----- POSITION RESOURCE --------------//
+/**
+ * --POST--
+ * Purpose
+ *  Adds a Position to the PositionList table
+ * 
+ * Endpoint 
+ *  /positions
+ *  
+*/
+router.post('/positions', function (req, res, next) {
+  let valid = true;
+  if (!req.is('application/json')) {
+    res.send(400);
+  } else {
+    let outputData = [];
+    req.body.forEach(function (item) {
+      let decomp = [];
+      if (!item['position_name']) {
+        valid = false;
+      }
+      decomp[0] = item['position_name'];
+      decomp[1] = item['job_code'];
+      decomp[2] = 1; //CURRENT EMPLOYEE ID
+      outputData.push(decomp);
+    });
+
+    if(!valid) {
+      res.sendStatus(400);
+      return;
+    }
+
+    let sql = "CALL addPosition(?,?,?)";
+    for (let x = 0; x < outputData.length; ++x) {
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    res.send("OK");
+  }
+});
+
+//----- END POSITION RESOURCE -------//
+//----- CONTACT RESOURCE --------------//
+/**
+ * --POST--
+ * Purpose
+ *  Adds a Contact Method to the PositionList table
+ * 
+ * Endpoint 
+ *  /contacts
+ *  
+*/
+router.post('/contacts', function (req, res, next) {
+  let valid = true;
+  if (!req.is('application/json')) {
+    res.send(400);
+  } else {
+    let outputData = [];
+    req.body.forEach(function (item) {
+      let decomp = [];
+      if (!item['method_id']) {
+        valid = false;
+      }
+      decomp[0] = item['method_id'];
+      decomp[1] = item['method'];
+      decomp[2] = 1; //CURRENT EMPLOYEE ID
+      outputData.push(decomp);
+    });
+
+    if(!valid) {
+      res.sendStatus(400);
+      return;
+    }
+
+    let sql = "CALL addContactMethod(?,?,?)";
+    for (let x = 0; x < outputData.length; ++x) {
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    res.send("OK");
+  }
+});
+
+//----- END CONTACT RESOURCE -------//
+//----- DEPARTMENT RESOURCE --------------//
+/**
+ * --POST--
+ * Purpose
+ *  Adds a Contact Method to the PositionList table
+ * 
+ * Endpoint 
+ *  /contacts
+ *  
+*/
+router.post('/departments', function (req, res, next) {
+  let valid = true;
+  if (!req.is('application/json')) {
+    res.send(400);
+  } else {
+    let outputData = [];
+    req.body.forEach(function (item) {
+      let decomp = [];
+      if (!item['department_id']) {
+        valid = false;
+      }
+      decomp[0] = item['department_id'];
+      decomp[1] = item['department_name'];
+      decomp[2] = item['primary_manager'];
+      decomp[3] = item['secondary_manager'];
+      decomp[4] = 1; //CURRENT EMPLOYEE ID
+      outputData.push(decomp);
+    });
+
+    if(!valid) {
+      res.sendStatus(400);
+      return;
+    }
+
+    let sql = "CALL addDepartment(?,?,?,?,?)";
+    for (let x = 0; x < outputData.length; ++x) {
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    res.send("OK");
+  }
+});
+
+//----- END DEPARTMENT RESOURCE -------//
 module.exports = router;
