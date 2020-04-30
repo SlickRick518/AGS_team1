@@ -23,7 +23,7 @@ function checkFileType() {
         //Problem reading file
         console.log(ex);
     };
-    
+
     //Does not support filenames with .json.csv properly
     if (name.includes(".csv"))
         reader.readAsText(file);
@@ -55,7 +55,7 @@ function readExcelFile(file) {
  * @param {} file 
  */
 function readJsonFile(file) {
-   postRequest(file, type); //SEND OUT THE DOOR TO API CALL
+    postRequest(file, type); //SEND OUT THE DOOR TO API CALL
 };
 
 /**
@@ -63,7 +63,7 @@ function readJsonFile(file) {
  * @param {*} file 
  */
 function readCsvFile(file) {
-postRequest(csvJSON(file), type); //SEND OUT THE DOOR TO API CALL
+    postRequest(csvJSON(file), type); //SEND OUT THE DOOR TO API CALL
 };
 
 /**
@@ -91,14 +91,17 @@ function csvJSON(csv) {
     var headers = lines[0].split(delimeter);
 
     for (var i = 1; i < lines.length; i++) {
-
         var obj = {};
         var currentline = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
 
         for (var j = 0; j < headers.length; j++) {
-            let string = currentline[j];
-            if(currentline[j]){
-                obj[headers[j]] = currentline[j].replace(/(\")/g, "");
+            try {
+                if (currentline[j]) {
+                    console.log(currentline[j]);
+                    obj[headers[j]] = currentline[j].replace(/(\")/g, "");
+                }
+            } catch (e) {
+                console.log("May have reached empty or incomplete line");
             }
         }
         result.push(obj);
@@ -120,12 +123,14 @@ function postRequest(data, resource) {
     $.ajax({
         type: "POST",
         url: api_domain + resource,
-        data: {'data': data},
+        contentType: "application/json",
+        data: data,
         success: function (result, status, xhr) {
             alert("File uploaded without a problem");
             window.location.reload();
         },
         error: function (xhr, status, error) {
+            console.log(data);
             alert("Result: " + status + " |  " + error + "  | " + xhr.status + " | " + xhr.statusText);
         }
     });

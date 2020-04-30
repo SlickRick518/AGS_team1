@@ -27,21 +27,40 @@ router.get('/', function (req, res, next) {
  *  /languages
  *  
  * Expected body params
+ * // ARRAY OF DATA ENTRIES FOR EACH RECORD
  *  lang_id: int
  *  lang_name: string(20)
- *  emp_id: int
 */
-router.post('/languages', function ({ body }, res, next) {
-  const {
-    lang_id,
-    lang_name,
-    emp_id
-  } = body;
-  let sql = "CALL addLanguage(?,?,?)";
-  con.query(sql, [lang_id, lang_name, emp_id], function (err, result, fields) {
-    if (err) console.log(err);
-    res.send(result);
-  })
+router.post('/languages', function (req, res, next) {
+  let valid = true;
+  if (!req.is('application/json')) {
+    res.send(400);
+  } else {
+    let outputData = [];
+    req.body.forEach(function (item) {
+      let decomp = [];
+      if(!item['lang_id'] || !item['lang_name']) {
+        valid = false;
+      }
+      decomp[0] = item['lang_id'];
+      decomp[1] = item['lang_name'];
+      decomp[2] = 1; //CURRENT USER ID
+      outputData.push(decomp);
+    });
+    if(!valid) {
+      res.sendStatus(400);
+      return;
+    }
+    let sql = "CALL addLanguage(?,?,?)";
+    for (let x = 0; x < outputData.length; ++x) {
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    res.send("OK");
+  }
 });
 
 /**
@@ -53,22 +72,42 @@ router.post('/languages', function ({ body }, res, next) {
  * /languages
  * 
  * * Expected body params
+ * // ARRAY OF DATA ENTRIES FOR EACH RECORD
  * lang_id: int
  * lang_name: string(20)
- * emp_id: int
  *  
  */
-router.put('/languages', function ({ body }, res, next) {
-  const {
-    lang_id,
-    lang_name,
-    emp_id
-  } = body;
-  let sql = "CALL modifyLanguage(?,?,?)";
-  con.query(sql, [lang_id, lang_name, emp_id], function (err, result, fields) {
-    if (err) console.log(err);
-    res.send(result);
-  })
+router.put('/languages', function (req, res, next) {
+  let valid = true;
+  if (!req.is('application/json')) {
+    res.sendStatus(400);
+  } else {
+    let outputData = [];
+    req.body.forEach(function (item) {
+      let decomp = [];
+      if(!item['lang_id'] || !item['lang_name']) {
+        valid = false;
+      }
+      decomp[0] = item['lang_id'];
+      decomp[1] = item['lang_name'];
+      decomp[2] = 1; //CURRENT USER ID
+      outputData.push(decomp);
+    });
+
+    if(!valid) {
+      res.sendStatus(400);
+      return;
+    }
+    let sql = "CALL modifyLanguage(?,?,?)";
+    for (let x = 0; x < outputData.length; ++x) {
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    res.send("OK");
+  }
 });
 //----- END LANGAUGES RESOURCE -------//
 
@@ -82,7 +121,7 @@ router.put('/languages', function ({ body }, res, next) {
  * /shifts
  * 
  * * Expected body params
- * data[]  // ARRAY OF DATA ENTRIES FOR EACH RECORD
+ * // ARRAY OF DATA ENTRIES FOR EACH RECORD
  * { 
  *        Employee Id
  *        Primary Location Name - Single Location
@@ -97,32 +136,43 @@ router.put('/languages', function ({ body }, res, next) {
  * }
  */
 router.post('/shifts', function (req, res, next) {
-  let json = JSON.parse(req.body.data);
-  let outputData = [];
-  json.forEach(function (item) {
-    let decomp = [];
-    decomp[0] = item['Id'];
-    decomp[1] = item['Primary Location Name - Single Location'];
-    decomp[2] = item['Primary Job'];
-    decomp[3] = item['Seniority Date'];
-    decomp[4] = item['Scheduled Hours'];
-    decomp[5] = item['Type'];
-    decomp[6] = item['Shift Start Time'];
-    decomp[7] = item['Shift Start Date'];
-    decomp[8] = item['Shift End Time'];
-    decomp[9] = item['Shift End Date'];
-    decomp[10] = 1; //CURRENT USER ID
-    outputData.push(decomp);
-  });
-  let sql = "CALL addEmployeeShift(?,?,?,?,?,?,?,?,?,?,?)";
-  for (let x = 0; x < outputData.length; ++x) {
-    con.query(sql, outputData[x], function (err, result, fields) {
-      if (err) {
-        console.log(err);
+  let valid = true;
+  if (!req.is('application/json')) {
+    res.sendStatus(400);
+  } else {
+    let outputData = [];
+    req.body.forEach(function (item) {
+      let decomp = [];
+      if (!item['Id']) {
+        valid = false;
       }
+      decomp[0] = item['Id'];
+      decomp[1] = item['Primary Location Name - Single Location'];
+      decomp[2] = item['Primary Job'];
+      decomp[3] = item['Seniority Date'];
+      decomp[4] = item['Scheduled Hours'];
+      decomp[5] = item['Type'];
+      decomp[6] = item['Shift Start Time'];
+      decomp[7] = item['Shift Start Date'];
+      decomp[8] = item['Shift End Time'];
+      decomp[9] = item['Shift End Date'];
+      decomp[10] = 1; //CURRENT USER ID
+      outputData.push(decomp);
     });
+    if (!valid) {
+      res.sendStatus(400);
+      return;
+    }
+    let sql = "CALL addEmployeeShift(?,?,?,?,?,?,?,?,?,?,?)";
+    for (let x = 0; x < outputData.length; ++x) {
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    res.send("OK");
   }
-  res.send("OK");
 });
 
 /**
@@ -134,7 +184,7 @@ router.post('/shifts', function (req, res, next) {
  * /shifts
  * 
  * * Expected body params
- * data[]  // ARRAY OF DATA ENTRIES FOR EACH RECORD
+ * // ARRAY OF DATA ENTRIES FOR EACH RECORD
  * { 
  *        ShiftId
  *        Employee Id
@@ -151,37 +201,93 @@ router.post('/shifts', function (req, res, next) {
  * }
  */
 router.put('/shifts', function (req, res, next) {
-  let json = JSON.parse(req.body.data);
-  let outputData = [];
-  json.forEach(function (item) {
-    let decomp = [];
-    decomp[0] = item['ShiftId'];
-    decomp[1] = item['Employee Id'];
-    decomp[2] = item['Primary Location Name - Single Location'];
-    decomp[3] = item['Primary Job'];
-    decomp[4] = item['Seniority Date'];
-    decomp[5] = item['Scheduled Hours'];
-    decomp[6] = item['Type'];
-    decomp[7] = item['ShiftStatus'];
-    decomp[8] = item['Shift Start Time'];
-    decomp[9] = item['Shift Start Date'];
-    decomp[10] = item['Shift End Time'];
-    decomp[11] = item['Shift End Date'];
-    decomp[12] = 1; //CURRENT 'MODIFIED BY' USER ID
-    outputData.push(decomp);
-  });
-  console.log(outputData.length);
-  let sql = "CALL updateEmployeeShift(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-  for (let x = 0; x < outputData.length; ++x) {
-    console.log("called");
-    con.query(sql, outputData[x], function (err, result, fields) {
-      if (err) {
-        console.log(err);
+  let valid = true;
+  if (!req.is('application/json')) {
+    res.send(400);
+  } else {
+    let outputData = [];
+    req.body.forEach(function (item) {
+      let decomp = [];
+      if (!item['Id']) {
+        valid = false;
       }
+      decomp[0] = item['ShiftId'];
+      decomp[1] = item['Employee Id'];
+      decomp[2] = item['Primary Location Name - Single Location'];
+      decomp[3] = item['Primary Job'];
+      decomp[4] = item['Seniority Date'];
+      decomp[5] = item['Scheduled Hours'];
+      decomp[6] = item['Type'];
+      decomp[7] = item['ShiftStatus'];
+      decomp[8] = item['Shift Start Time'];
+      decomp[9] = item['Shift Start Date'];
+      decomp[10] = item['Shift End Time'];
+      decomp[11] = item['Shift End Date'];
+      decomp[12] = 1; //CURRENT 'MODIFIED BY' USER ID
+      outputData.push(decomp);
     });
+    if (!valid) {
+      res.sendStatus(400);
+      return;
+    }
+    let sql = "CALL updateEmployeeShift(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    for (let x = 0; x < outputData.length; ++x) {
+      console.log("called");
+      con.query(sql, outputData[x], function (err, result, fields) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    res.send("OK");
   }
-  res.send("OK");
 });
 
 //----- END SHIFTS RESOURCE ----------//
+
+//----- DIVISION RESOURCE --------------//
+/**
+ * --POST--
+ * Purpose
+ *  Adds a Division Code to the DivisionCode Table in the Database
+ * 
+ * Endpoint 
+ *  /Divisions
+ *  
+ * Expected body params
+  * // ARRAY OF DATA ENTRIES FOR EACH RECORD
+ *  DivisionCode: int(11)
+ *  DivisionName: string(20)
+ *  DivisionAbbreviation: varchar(5)
+*/
+router.post('/divisions', function (req, res, next) {
+  if (!req.is('application/json')) {
+    res.send(400);
+  } else {
+    let outputData = [];
+    req.body.forEach(function (item) {
+      let decomp = [];
+      if (!item['div_code'] || !item['division_name']) {
+        valid = false;
+      }
+      decomp[0] = item['div_code'];
+      decomp[1] = item['division_name'];
+      decomp[2] = item['div_abbreviation'];
+      decomp(3) = 1; //CURRENT EMPLOYEE ID
+      outputData.push(decomp);
+    });
+
+    if(!valid) {
+      res.sendStatus(400);
+      return;
+    }
+
+    let sql = "CALL addDivisionCode(?,?,?,?)";
+    con.query(sql, [DivCode, DivName, DivAbbreviation, 1], function (err, result, fields) {
+      if (err) console.log(err);
+      res.send(result);
+    })
+  }
+});
+//----- END DIVISION RESOURCE -------//
 module.exports = router;
