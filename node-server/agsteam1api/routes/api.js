@@ -339,6 +339,30 @@ router.get('/shifts/type/:shiftTypeID', function (req, res, next) {
   });
 });
 
+/**
+ *  --GET--
+ * Purpose
+ *  Get shift status from the database
+ */
+router.get('/shifts/status/:status', function (req, res, next) {
+  con.query("CALL getShiftStatus("+req.params.status+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get shift information by shift type from the database
+ */
+router.get('/shifts/type/:shiftTypeID', function (req, res, next) {
+  con.query("CALL getShiftType("+req.params.shiftTypeID+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
 
 //----- END SHIFTS RESOURCE ----------//
 
@@ -392,6 +416,29 @@ router.post('/divisions', function (req, res, next) {
   }
 });
 
+/**
+ *  --GET--
+ * Purpose
+ *  Get all division information from the database
+ */
+router.get('/divisions', function (req, res, next) {
+  con.query("CALL getAllDivisions()", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get division information by abbreviation from the database
+ */
+router.get('/divisions/:abbreviation', function (req, res, next) {
+  con.query("CALL getDivision("+req.params.abbreviation+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
 //----- END DIVISION RESOURCE -------//
 
 //----- EMPLOYEES RESOURCE --------------//
@@ -457,6 +504,53 @@ router.get('/employees', function (req, res, next) {
   });
 });
 
+/**
+ *  --GET--
+ * Purpose
+ *  Get langauge information by id from the database
+ */
+router.get('/employees/:employeeId', function (req, res, next) {
+  con.query("CALL getEmployee("+req.params.employeeId+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get employee by username
+ */
+router.get('/employees/username/:username', function (req, res, next) {
+  con.query("CALL getEmployeeByUsername("+req.params.username+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get employee by phone number
+ */
+router.get('/employees/phone/:phone', function (req, res, next) {
+  con.query("CALL getEmployeeByPhone("+req.params.phone+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get employee by language 
+ */
+router.get('/employees/language/:languageId', function (req, res, next) {
+  con.query("CALL getEmployeeByLanguage("+req.params.languageId+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
 //----- END EMPLOYEE RESOURCE -------//
 //----- POSITION RESOURCE --------------//
 /**
@@ -525,6 +619,19 @@ router.get('/positions/:positionID', function (req, res, next) {
     res.send(result);
   });
 });
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get langauge information by id from the database
+ */
+router.get('/positions/employee/:employeeId', function (req, res, next) {
+  con.query("CALL getPositionEmployee("+req.params.employeeId+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
 
 //----- END POSITION RESOURCE -------//
 //----- CONTACT RESOURCE --------------//
@@ -616,6 +723,54 @@ router.post('/departments', function (req, res, next) {
     }
     res.send("OK");
   }
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get all department information from the database
+ */
+router.get('/departments', function (req, res, next) {
+  con.query("CALL getAllDepartments()", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get department information by id from the database
+ */
+router.get('/departments/:departmentId', function (req, res, next) {
+  con.query("CALL getDepartment("+req.params.departmentId+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get department information by name from the database
+ */
+router.get('/departments/name/:departmentName', function (req, res, next) {
+  con.query("CALL getDepartmentByName("+req.params.departmentName+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get department information by manager from the database
+ */
+router.get('/departments/manager/:managerId', function (req, res, next) {
+  con.query("CALL getDepartmentByManager("+req.params.managerId+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
 });
 
 //----- END DEPARTMENT RESOURCE -------//
