@@ -123,6 +123,31 @@ router.put('/languages', function (req, res, next) {
     res.send("OK");
   }
 });
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get all of the langauges stored in the database
+ */
+router.get('/languages', function (req, res, next) {
+  con.query("CALL getAllLanguages()", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
+/**
+ *  --GET--
+ * Purpose
+ *  Get langauge information by id from the database
+ */
+router.get('/languages/:languageId', function (req, res, next) {
+  con.query("CALL getLanguage("+req.params.languageId+")", function (err, result, fields) {
+    if (err) console.log(err);
+    res.send(result);
+  });
+});
+
 //----- END LANGAUGES RESOURCE -------//
 
 //----- SHIFTS RESOURCE --------------//
