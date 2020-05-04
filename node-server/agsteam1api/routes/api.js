@@ -299,7 +299,7 @@ router.get('/shifts', function (req, res, next) {
  * Purpose
  *  Get shift information by employee id from the database
  */
-router.get('/shifts/:shiftEmployeeID', function (req, res, next) {
+router.get('/shifts/employee/:shiftEmployeeID', function (req, res, next) {
   con.query("CALL getShiftEmployee("+req.params.shiftEmployeeID+")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
@@ -310,7 +310,7 @@ router.get('/shifts/:shiftEmployeeID', function (req, res, next) {
  * Purpose
  *  Get shift information by location id from the database
  */
-router.get('/shifts/:shiftLocationID', function (req, res, next) {
+router.get('/shifts/location/:shiftLocationID', function (req, res, next) {
   con.query("CALL getShiftLocation("+req.params.shiftLocationID+")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
@@ -321,7 +321,7 @@ router.get('/shifts/:shiftLocationID', function (req, res, next) {
  * Purpose
  *  Get shift information by job code from the database
  */
-router.get('/shifts/:shiftJobCodeID', function (req, res, next) {
+router.get('/shifts/jobcode/:shiftJobCodeID', function (req, res, next) {
   con.query("CALL getShiftJobCode("+req.params.shiftJobcodeID+")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
@@ -332,7 +332,7 @@ router.get('/shifts/:shiftJobCodeID', function (req, res, next) {
  * Purpose
  *  Get shift information by shift type from the database
  */
-router.get('/shifts/:shiftTypeID', function (req, res, next) {
+router.get('/shifts/type/:shiftTypeID', function (req, res, next) {
   con.query("CALL getShiftType("+req.params.shiftTypeID+")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
