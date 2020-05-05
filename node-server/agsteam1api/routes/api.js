@@ -498,7 +498,7 @@ router.get('/employees/:employeeId', function (req, res, next) {
  *  Get employee by username
  */
 router.get('/employees/username/:username', function (req, res, next) {
-  con.query("CALL getEmployeeByUsername("+req.params.username+")", function (err, result, fields) {
+  con.query("CALL getEmployeeByUsername(\""+req.params.username+"\")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   });
@@ -510,7 +510,7 @@ router.get('/employees/username/:username', function (req, res, next) {
  *  Get employee by phone number
  */
 router.get('/employees/phone/:phone', function (req, res, next) {
-  con.query("CALL getEmployeeByPhone("+req.params.phone+")", function (err, result, fields) {
+  con.query("CALL getEmployeeByPhone(\""+req.params.phone+"\")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   });
@@ -522,7 +522,7 @@ router.get('/employees/phone/:phone', function (req, res, next) {
  *  Get employee by language 
  */
 router.get('/employees/language/:languageId', function (req, res, next) {
-  con.query("CALL getEmployeeByLanguage("+req.params.languageId+")", function (err, result, fields) {
+  con.query("CALL getEmployeesByLanguage("+req.params.languageId+")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   });
@@ -602,7 +602,7 @@ router.get('/positions/:positionID', function (req, res, next) {
  *  Get langauge information by id from the database
  */
 router.get('/positions/employee/:employeeId', function (req, res, next) {
-  con.query("CALL getPositionEmployee("+req.params.employeeId+")", function (err, result, fields) {
+  con.query("CALL getPositionsByEmployee("+req.params.employeeId+")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   });
@@ -731,7 +731,7 @@ router.get('/departments/:departmentId', function (req, res, next) {
  *  Get department information by name from the database
  */
 router.get('/departments/name/:departmentName', function (req, res, next) {
-  con.query("CALL getDepartmentByName("+req.params.departmentName+")", function (err, result, fields) {
+  con.query("CALL getDepartmentByName(\""+req.params.departmentName+"\")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   });
