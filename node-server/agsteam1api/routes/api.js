@@ -5,7 +5,7 @@ var passport = require('passport');
 var path = require('path');
 
 var con = mysql.createPool({
-  password: 'Secure_123',
+  password: '',
   user: 'dushar88',
   host: 'ec2-54-89-210-177.compute-1.amazonaws.com',
   port: 3306,
