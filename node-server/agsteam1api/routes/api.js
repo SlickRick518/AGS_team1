@@ -300,7 +300,7 @@ router.get('/shifts', function (req, res, next) {
  *  Get shift information by employee id from the database
  */
 router.get('/shifts/employee/:shiftEmployeeID', function (req, res, next) {
-  con.query("CALL getShiftEmployee("+req.params.shiftEmployeeID+")", function (err, result, fields) {
+  con.query("CALL getShiftsByEmployee("+req.params.shiftEmployeeID+")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   });
@@ -311,7 +311,7 @@ router.get('/shifts/employee/:shiftEmployeeID', function (req, res, next) {
  *  Get shift information by location id from the database
  */
 router.get('/shifts/location/:shiftLocationID', function (req, res, next) {
-  con.query("CALL getShiftLocation("+req.params.shiftLocationID+")", function (err, result, fields) {
+  con.query("CALL getShiftsByLocation("+req.params.shiftLocationID+")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   });
@@ -322,18 +322,7 @@ router.get('/shifts/location/:shiftLocationID', function (req, res, next) {
  *  Get shift information by job code from the database
  */
 router.get('/shifts/jobcode/:shiftJobCodeID', function (req, res, next) {
-  con.query("CALL getShiftJobCode("+req.params.shiftJobcodeID+")", function (err, result, fields) {
-    if (err) console.log(err);
-    res.send(result);
-  });
-});
-/**
- *  --GET--
- * Purpose
- *  Get shift information by shift type from the database
- */
-router.get('/shifts/type/:shiftTypeID', function (req, res, next) {
-  con.query("CALL getShiftType("+req.params.shiftTypeID+")", function (err, result, fields) {
+  con.query("CALL getShiftsByJobCode("+req.params.shiftJobCodeID+")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   });
@@ -344,25 +333,12 @@ router.get('/shifts/type/:shiftTypeID', function (req, res, next) {
  * Purpose
  *  Get shift status from the database
  */
-router.get('/shifts/status/:status', function (req, res, next) {
-  con.query("CALL getShiftStatus("+req.params.status+")", function (err, result, fields) {
+router.get('/shifts/status/:shiftstatus', function (req, res, next) {
+  con.query("CALL getShiftsByStatus(\""+req.params.shiftstatus+"\")", function (err, result, fields) {
     if (err) console.log(err);
     res.send(result);
   });
 });
-
-/**
- *  --GET--
- * Purpose
- *  Get shift information by shift type from the database
- */
-router.get('/shifts/type/:shiftTypeID', function (req, res, next) {
-  con.query("CALL getShiftType("+req.params.shiftTypeID+")", function (err, result, fields) {
-    if (err) console.log(err);
-    res.send(result);
-  });
-});
-
 
 //----- END SHIFTS RESOURCE ----------//
 
