@@ -9,26 +9,27 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+    <script>
+        $(function(){
+          $("#nav-placeholder").load("/components/NavBar.html");
+        });
+    </script>
+
 
     <script src="scripts/data-import-file-upload.js"></script>
     <script src="scripts/ui-helper.js"></script>
 </head>
 
-<body>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Team 1 - Data Import Utility Demo</a>
-            </div>
-        </div>
-    </nav>
+<body style="background-color: lavender;">
+    <div id="nav-placeholder"></div>
     <div class="container-fluid">
         <div class="row">
             <h1>Data Import Utility</h1>
         </div>
         <div class="row">
-            <div style="width: 81px" class="dropdown">
-                <p>Import Type</p>
+            <div style="width: 300px" class="dropdown">
+                <h3>Select type first</h3>
+                <br>
                 <button id=dropdown-button class="btn btn-default dropdown-toggle" type="button"
                     data-toggle="dropdown">Set Type...
                     <span class="caret"></span>
@@ -60,7 +61,7 @@
         </div>
         <br>
         <div class="row">
-            <label for="fileinput" class="custom-file-upload">Browse...</label>
+            <label for="fileinput" class="custom-file-upload" style="background-color: white;">Browse...</label>
             <input id="fileinput" type="file" disabled="disabled"/><br>
             <p id="filename"></p>
             <button id="submitButton" class="btn btn-default" onclick="submitfiles()" disabled="disabled">Submit</button>
